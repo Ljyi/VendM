@@ -1,0 +1,642 @@
+﻿@{
+    ViewBag.BodyClass = "page-aside-fixed page-aside-left site-contabs-open site-menubar-unfold ";
+}
+<link href="~/Scripts/zTree/css/metroStyle/metroStyle.css" rel="stylesheet" />
+<script src="~/Scripts/zTree/js/jquery.ztree.all.min.js"></script>
+<div class="page animation-fade">
+    <div class="page-aside">
+        <div class="page-aside-switch">
+            <i class="icon wb-chevron-left" aria-hidden="true"></i>
+            <i class="icon wb-chevron-right" aria-hidden="true"></i>
+        </div>
+        <div class="page-aside-inner page-aside-scroll" data-plugin="mCustomScrollbar">
+            <div data-role="container">
+                <div data-role="content">
+                    <section class="page-aside-section">
+                        <div class="list-group">
+                            <a class="list-group-item" href="javascript:;" onclick="App.pId = ''">
+                                <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;所有一级
+                            </a>
+                        </div>
+                    </section>
+                    <section class="page-aside-section">
+                        <!--标签树-->
+                        <ul id="tree" class="ztree"></ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-main">
+        <div id="menuVuewId" class="page-content" style=" display:block">
+            <!--高级检索部分-->
+            <div class="panel" id="panelSearch">
+                <div class="panel-heading">
+                    <h3 class="panel-title">高级检索</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-3 pannel-box">
+                        <h4 class="example-title h4-box">菜单编码</h4>
+                        <input type="text" class="form-control input-box" id="MenuCode" placeholder="请输入菜单编码">
+                    </div>
+                    <div class="col-sm-3 pannel-box">
+                        <h4 class="example-title h4-box">菜单名称</h4>
+                        <input type="text" class="form-control input-box" id="MenuName" placeholder="请输入菜单名称">
+                    </div>
+                </div>
+            </div>
+            <!--列表-->
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="col-sm-12 pl-25 pr-25 pt-15 pb-10">
+                        <button type="button" class="btn btn-primary" onclick="window.location=window.location">
+                            <i class="fa fa-rotate-right"></i>&nbsp;刷新
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Search" name="search" id="search">
+                            <i class="fa fa-search"></i>&nbsp;查询
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Add" name="add" id="add">
+                            <i class="fa fa-plus"></i>&nbsp;添加
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Edit" name="edit" id="edit" disabled="disabled">
+                            <i class="fa fa-pencil"></i>&nbsp;修改
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Delete" name="delete" id="delete" disabled="disabled">
+                            <i class="fa fa-trash"></i>&nbsp;删除
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body container-fluid pb-0">
+                    <!--表格-->
+                    <table class="table table-hover" id="menuTable"></table>
+                </div>
+            </div>
+        </div>
+        <div id="sysMenuActionVuewId" class="page-content" style=" display:none">
+            <!--高级检索部分-->
+            <div class="panel" id="panelSearch">
+                <div class="panel-heading">
+                    <h3 class="panel-title">高级检索</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-3 pannel-box">
+                        <h4 class="example-title h4-box">按钮编码</h4>
+                        <input type="text" class="form-control input-box" id="ButtonCode" placeholder="请输入按钮编码">
+                    </div>
+                    <div class="col-sm-3 pannel-box">
+                        <h4 class="example-title h4-box">按钮名称</h4>
+                        <input type="text" class="form-control input-box" id="ButtonName" placeholder="请输入按钮名称">
+                    </div>
+                </div>
+            </div>
+            <!--列表-->
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="col-sm-12 pl-25 pr-25 pt-15 pb-10">
+                        <button type="button" class="btn btn-primary" onclick="window.location=window.location">
+                            <i class="fa fa-rotate-right"></i>&nbsp;刷新
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Search" name="search" id="buttonSearch">
+                            <i class="fa fa-search"></i>&nbsp;查询
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Add" name="add" id="buttonAdd">
+                            <i class="fa fa-plus"></i>&nbsp;添加
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Edit" name="edit" id="buttonEdit" disabled="disabled">
+                            <i class="fa fa-pencil"></i>&nbsp;修改
+                        </button>
+                        <button type="button" class="btn btn-primary" data-power="Delete" name="delete" id="buttonDelete" disabled="disabled">
+                            <i class="fa fa-trash"></i>&nbsp;删除
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body container-fluid pb-0">
+                    <!--表格-->
+                    <table class="table table-hover" id="sysMenuActionTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        /*************菜单******************/
+        $("#search").on('click', function () {
+            $("#menuTable").bootstrapTable('refresh', { url: '/Menu/GetMenuGrid' });
+        });
+        //创建
+        $("#add").on('click', function () {
+            CreateMenu(pId);
+        });
+        //编辑
+        $("#edit").on('click', function () {
+            var id = $.map($('#menuTable').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            if (id.length != 1) {
+                layer.msg('请选中一行', {
+                    time: 4000,
+                });
+            } else {
+                EditMenu(id);
+            }
+        });
+        //删除
+        $("#delete").on('click', function () {
+            var ids = $.map($('#menuTable').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            if (ids.length < 1) {
+                layer.msg('请至少选中一行', {
+                    time: 4000, //20s后自动关闭
+                });
+            } else {
+                Delete(ids.join(","));
+            }
+        });
+
+        /*************菜单按钮******************/
+        $("#buttonSearch").on('click', function () {
+            sysMenuActionRefresh();
+        });
+        //创建
+        $("#buttonAdd").on('click', function () {
+            SysMenuActionCreate(pId);
+        });
+        //编辑
+        $("#buttonEdit").on('click', function () {
+            var id = $.map($('#sysMenuActionTable').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            if (id.length != 1) {
+                layer.msg('请选中一行', {
+                    time: 4000,
+                });
+            } else {
+                SysMenuActionEdit(id);
+            }
+        });
+        //删除
+        $("#buttonDelete").on('click', function () {
+            var ids = $.map($('#sysMenuActionTable').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            if (ids.length < 1) {
+                layer.msg('请至少选中一行', {
+                    time: 4000, //20s后自动关闭
+                });
+            } else {
+                SysMenuActionDelete(ids.join(","));
+            }
+        });
+        //用户
+        //1.初始化用户Table
+        var menuTablets = new menuTableInit();
+        menuTablets.Init();
+        var sysMenuActionTableInits = new sysMenuActionTableInit();
+        sysMenuActionTableInits.Init();
+        GetMenuTree();
+    });
+    var menuTableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#menuTable').bootstrapTable({
+                url: '/Menu/GetMenuGrid',
+                ajaxOptions: { async: true, timeout: 10000 },
+                method: 'get',
+                striped: false,
+                toolbar: false,                     //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                silentSort: true,
+                sortStable: true,
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                height: "auto",                     //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                  //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                  //是否显示父子表
+                columns: [
+                    {
+                        checkbox: true,
+                        visible: true                  //是否显示复选框
+                    },
+                    {
+                        field: 'Id',
+                        title: 'Id',
+                        sortable: true
+                    },
+                    {
+                        field: 'MenuCode',
+                        title: '菜单编码',
+                        sortable: true
+                    },
+                    {
+                        field: 'Url',
+                        title: '地址'
+                    },
+                    {
+                        field: 'MenuName',
+                        title: '菜单名称'
+                    },
+                    {
+                        field: 'MenuLevel',
+                        title: '菜单级别'
+                    },
+                    {
+                        field: 'ParentId',
+                        title: '父级菜单'
+                    },
+                    {
+                        field: 'Status',
+                        title: '状态',
+                        formatter: function (value, row, index) {
+                            if (value == 1) {
+                                return "开启";
+                            } else {
+                                return "关闭";
+                            }
+                        }
+                    },
+                    {
+                        field: 'CreateUser',
+                        title: '创建人'
+                    },
+                    {
+                        field: 'CredateTime',
+                        title: '创建时间',
+                        formatter: function (value, row, index) {
+                            return Common.DateFormat(value)
+                        }
+                    },
+                    {
+                        field: 'UpdateUser',
+                        title: '最后人'
+                    },
+                    {
+                        field: 'UpdateTime',
+                        title: '最后更新时间',
+                        formatter: function (value, row, index) {
+                            return Common.DateFormat(value)
+                        }
+                    }
+                ],
+                onClickRow: function () {
+                    var selectRows = $.map($('#menuTable').bootstrapTable('getSelections'), function (row) {
+                        return row.Id;
+                    });
+                    if (selectRows.length >= 0) {
+                            $("#edit").removeAttr('disabled');
+                            $("#delete").removeAttr('disabled');
+                    } else {
+                        $("#edit").attr('disabled', true);
+                        $("#delete").attr('disabled', true);
+                    }
+                },
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                sort: params.sort,      //排序列名
+                sortOrder: params.order, //排位命令（desc，asc）
+                parentId: pId,
+                menucode: $("#MenuCode").val(),
+                menuname: $("#MenuName").val()
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+
+    var sysMenuActionTableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#sysMenuActionTable').bootstrapTable({
+                url: '/SysMenuAction/GetSysMenuActionGrid',
+                ajaxOptions: { async: true, timeout: 10000 },
+                method: 'get',
+                striped: false,
+                toolbar: false,                     //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                silentSort: true,
+                sortStable: true,
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                height: "auto",                     //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                  //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                  //是否显示父子表
+                columns: [
+                    {
+                        checkbox: true,
+                        visible: true                  //是否显示复选框
+                    },
+                    {
+                        field: 'Id',
+                        title: 'Id',
+                        sortable: true
+                    },
+                    {
+                        field: 'ActionName',
+                        title: '方法名称',
+                        sortable: true
+                    },
+                    {
+                        field: 'ButtonCode',
+                        title: '按钮编码',
+                        sortable: true
+                    },
+                    {
+                        field: 'ButtonName',
+                        title: '按钮名称'
+                    },
+                    {
+                        field: 'AuthorizeCode',
+                        title: '权限编码'
+                    },
+                    {
+                        field: 'Status',
+                        title: '状态',
+                        formatter: function (value, row, index) {
+                            if (value == 1) {
+                                return "开启";
+                            } else {
+                                return "关闭";
+                            }
+                        }
+                    },
+                    {
+                        field: 'CreateUser',
+                        title: '创建人'
+                    },
+                    {
+                        field: 'CredateTime',
+                        title: '创建时间',
+                        formatter: function (value, row, index) {
+                            return Common.DateFormat(value)
+                        }
+                    },
+                    {
+                        field: 'UpdateUser',
+                        title: '最后人'
+                    },
+                    {
+                        field: 'UpdateTime',
+                        title: '最后更新时间',
+                        formatter: function (value, row, index) {
+                            return Common.DateFormat(value)
+                        }
+                    }
+                ],
+                onClickRow: function () {
+                    var selectRows = $.map($('#menuTable').bootstrapTable('getSelections'), function (row) {
+                        return row.Id;
+                    });
+                    if (selectRows.length >= 0) {
+                        $("#buttonEdit").removeAttr('disabled');
+                        $("#buttonDelete").removeAttr('disabled');
+                    } else {
+                        $("#buttonEdit").attr('disabled', true);
+                        $("#buttonDelete").attr('disabled', true);
+                    }
+                },
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                sort: params.sort,      //排序列名
+                sortOrder: params.order, //排位命令（desc，asc）
+                menuId: pId,
+                menucode: $("#ButtonCode").val(),
+                menuname: $("#ButtonName").val()
+                };
+            return temp;
+            };
+        return oTableInit;
+    };
+
+    var pId = "";
+    var GetMenuTree = function () {
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "@Url.Action("GetMenuTree")",
+            success: function (r) {
+                var setting = {
+                    check: {
+                        enable: true,
+                        chkboxType: { "Y": "ps", "N": "ps" },
+                        chkDisabled: true
+                    },
+                    view: {
+                        dblClickExpand: true
+                    },
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "pId",
+                            rootPId: 0,
+                        },
+                        key: { checked: 'checked' }
+                    },
+                    callback: {
+                        onClick: function (event, treeId, treeNode) {
+                            debugger;
+                            pId = treeNode.id;
+                            var hasNodde = ajaxGetSysMenuAction(pId);
+                            if (!hasNodde) {
+                                sysMenuActionRefresh();
+                                $("#sysMenuActionVuewId").css('display', 'block');
+                                $("#menuVuewId").css('display', 'none');
+                            } else {
+                                menuRefresh();
+                                $("#sysMenuActionVuewId").css('display', 'none');
+                                $("#menuVuewId").css('display', 'block');
+                            }
+                        },
+                    }
+                };
+                zTree = $.fn.zTree.init($("#tree"), setting, r.value);
+            }
+        });
+    };
+    var ajaxGetSysMenuAction = function (menuId) {
+        var success = false;
+        $.ajax({
+                type: "get",
+            dataType: "json",
+            async: false,
+                url: '/System/Menu/GetMenuSubNode?menuId=' + menuId,
+            success: function (result) {
+               success=result.Success;
+            }
+        });
+        return success
+    }
+    var menuRefresh = function () {
+            var menuTablets = new menuTableInit();
+            var data = menuTablets.queryParams;
+            $("#menuTable").bootstrapTable('refresh', { query: data, url: '/Menu/GetMenuGrid' });
+    }
+    var sysMenuActionRefresh = function () {
+        var sysMenuActionTables = new sysMenuActionTableInit();
+        var data = sysMenuActionTables.queryParams;
+        $("#sysMenuActionTable").bootstrapTable('refresh', { query: data, url: '/System/SysMenuAction/GetSysMenuActionGrid' });
+    }
+</script>
+<script>
+    /*************菜单******************/
+    var CreateMenu = function (pid) {
+        layer.open({
+            type: 2,
+            title: '添加用户',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['50%', '90%'],
+            content: '/System/Menu/Add?pid=' + pid
+        })
+    }
+    //编辑
+    var EditMenu = function (id) {
+        layer.open({
+            type: 2,
+            title: '编辑用户',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['50%', '90%'],
+            content: '/System/Menu/Edit?id=' + id
+        })
+    }
+    //删除
+    var Delete = function (ids) {
+        layer.confirm('您确定要删除吗？', {
+            title: '提示',
+            move: false,
+            anim: 1, //默认动画风格
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                type: 'Post',
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ ids: ids }),
+                async: true,
+                url: 'Delete',
+                success: function (result) {
+                    if (result.Success) {
+                        layer.closeAll('dialog');
+                        layer.msg('删除成功！', {
+                            time: 2000,
+                        });
+                        $("#menuTable").bootstrapTable('refresh', { url: '/Menu/GetMenuGrid' });
+                    } else {
+                        layer.open({
+                            title: '提示',
+                            content: '删除失败！',
+                            move: false,
+                            btn: "知道了"
+                        });
+                    }
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+            })
+        });
+    };
+    /*************菜单按钮******************/
+    var SysMenuActionCreate = function (pid) {
+        layer.open({
+            type: 2,
+            title: '添加用户',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['40%', '65%'],
+            content: '/System/SysMenuAction/Add?menuId=' + pid
+        })
+    }
+    //编辑
+    var SysMenuActionEdit = function (id) {
+        layer.open({
+            type: 2,
+            title: '编辑用户',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['40%', '65%'],
+            content: '/System/SysMenuAction/Edit?id=' + id
+        })
+    }
+    //删除
+    var SysMenuActionDelete = function (ids) {
+        layer.confirm('您确定要删除吗？', {
+            title: '提示',
+            move: false,
+            anim: 1, //默认动画风格
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                type: 'Post',
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ ids: ids }),
+                async: true,
+                url: '/System/SysMenuAction/Delete',
+                success: function (result) {
+                    if (result.Success) {
+                        layer.closeAll('dialog');
+                        layer.msg('删除成功！', {
+                            time: 1000,
+                        });
+                        $("#sysMenuActionTable").bootstrapTable('refresh', { url: '/System/SysMenuAction/GetSysMenuActionGrid' });
+                    } else {
+                        layer.open({
+                            title: '提示',
+                            content: '删除失败！',
+                            move: false,
+                            btn: "知道了"
+                        });
+                    }
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+            })
+        });
+    };
+</script>
+
+

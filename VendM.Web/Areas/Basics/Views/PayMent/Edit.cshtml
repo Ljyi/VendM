@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+@model VendM.Model.DataModelDto.PayMentDto
+<script type="text/javascript">
+    /*自定义validate*/
+    var rules = {
+        PaymentName: {
+            required: true,
+        },
+        PaymentCode: "required",
+        Charge: {
+            required: true,
+        },
+        Fee: {
+            required: true,
+        },
+    },
+        messages = {
+            PaymentName: {
+                required: "请输入支付名稱",
+            },
+            PaymentCode: {
+                required: "请输入支付Code"
+            }
+        };
+    $(document).ready(function () {
+        // 在键盘按下并释放及提交后验证提交表单
+        $("form").validate({
+            rules: rules,
+            messages: messages
+        });
+    });
+   
+</script>
+@using (Html.BeginForm())
+{<div style=" margin:15px; border:1px">
+        <div class="form-group">
+            <label for="name">支付名称</label>
+            @Html.TextBoxFor(m => m.PaymentName, Model.PaymentName, new { @class = "form-control", placeholder = "请输入支付名称", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">支付Code</label>
+            @Html.TextBoxFor(m => m.PaymentCode, Model.PaymentCode, new { @class = "form-control", placeholder = "请输支付Code", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">状态</label>
+            @Html.DropDownListFor(m => m.Status, (IEnumerable<SelectListItem>)ViewBag.StatusType, new { @class = "form-control" })
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary btn-primary-subbtn">提交</button>
+        </div>
+    </div>
+}
+

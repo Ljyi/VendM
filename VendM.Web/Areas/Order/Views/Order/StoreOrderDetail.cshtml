@@ -1,0 +1,180 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<div class="page animation-fade">
+    <div class="page-content">
+        <!--列表-->
+        <div class="panel">
+            <div class="panel-heading">
+                <div>
+                    @ViewBag.storeName+ @ViewBag.machineAddress
+                </div>
+                <div class="col-sm-12 pl-25 pr-25 pt-15 pb-10">
+                    <button class="btn btn-primary" data-power="GetExcel" name="getExcel" id="exportExcel">
+                        <i class="fa fa-file-excel-o"></i>&nbsp;导出 Excel
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body container-fluid pb-0">
+                <!--表格-->
+                <table class="bootstrap-table" data-show-columns="false" id="StoreOrderDetail"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        //导出
+        $("#exportExcel").on('click', function () {
+            var ids = $.map($('#StoreOrderDetail').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            Export(ids);
+        });
+        //2.初始化Button的点击事件
+        var oButtonInit = new ButtonInit();
+        oButtonInit.Init();
+        var StoreOrderDetailts = new StoreOrderDetailInit();
+        StoreOrderDetailts.Init();
+    });
+    var ButtonInit = function () {
+        var oInit = new Object();
+        var postdata = {};
+        oInit.Init = function () {
+            //初始化页面上面的按钮事件
+        };
+        return oInit;
+    };
+    var StoreOrderDetailInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#StoreOrderDetail').bootstrapTable({
+                url: '/Order/Order/GetStoreOrderDetailsGrid',
+                ajaxOptions: { async: true, timeout: 10000 },
+                method: 'get',
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: false,
+                toolbar: false,                     //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                silentSort: true,
+                sortStable: true,
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                height: "auto",                     //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                  //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                  //是否显示父子表
+                columns: [
+                    {
+                        checkbox: true,
+                        visible: true              //是否显示复选框
+                    },
+                    {
+                        field: 'OrderNo',
+                        title: '訂單編號',
+                        sortable: true
+                    },
+                    {
+                        field: 'ProductName',
+                        title: '商品名称(中文)',
+                        sortable: true
+                    },
+                    {
+                        field: 'ProdcuctImges',
+                        title: '商品图片', formatter: function (value, row, index) {
+                            var returnHtml = '<a class = "view"  href="javascript:void(0)"><img style="width:70;height:30px;"  src="' + value + '" /></a>';
+                            return returnHtml;
+                        },
+                        events: 'imgEvents'
+                    },
+                    {
+                        field: 'Amount',
+                        title: '訂單金額(HK$)',
+                        sortable: true
+                    },
+                    {
+                        field: 'Points',
+                        title: '積分',
+                        sortable: true
+                    },
+                    {
+                        field: 'SaleType',
+                        title: '销售类型',
+                        sortable: true
+                    },
+                    {
+                        field: 'PayMent',
+                        title: '付款方式',
+                        sortable: true
+                    },
+                    {
+                        field: 'CredateTime',
+                        title: '購買時間',
+                        formatter: function (value, row, index) {
+                            return Common.DateFormat(value);
+                        }
+                    }
+                ]
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                sort: params.sort,      //排序列名
+                sortOrder: params.order, //排位命令（desc，asc）
+                machineNo: '@ViewBag.machineNo',
+                productCode:'@ViewBag.productCode',
+                orderTime:'@ViewBag.orderTime',
+            };
+            return temp;
+        };
+        return oTableInit;
+
+
+    };
+</script>
+
+<script>
+    window.imgEvents = {
+        'click .view': function (e, value, row, index) {
+            debugger;
+            var imgArr = row.ListImage;
+            var json = [];
+            imgArr.forEach(function (val, index) {
+                json.push({
+                    "alt": "图片" + index,
+                    "pid": index, //图片id
+                    "src": val //原图地址
+                });
+            });
+            layer.photos({
+                photos: {
+                    "title": "照片", //相册标题
+                    "id": 1, //相册id
+                    "start": 0, //初始显示的图片序号，默认0
+                    "data": json//相册包含的图片，数组格式
+                }
+            });
+        }
+    };
+</script>
+
+
+

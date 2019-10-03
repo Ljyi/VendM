@@ -1,0 +1,54 @@
+﻿
+@model VendM.Model.DataModelDto.PayMentDto
+@{
+    ViewBag.Title = "Add";
+}
+@using (Html.BeginForm("Add", "PayMent", FormMethod.Post))
+{
+<div style=" margin:15px; border:1px">
+    <div class="form-group">
+        <label for="name">支付名称</label>
+        @Html.TextBoxFor(m => m.PaymentName, new { @class = "form-control", placeholder = "支付名称", required = "required" })
+    </div>
+    <div class="form-group">
+        <label for="name">支付Code</label>
+        @Html.TextBoxFor(m => m.PaymentCode, new { @class = "form-control", placeholder = "Code", required = "required" })
+    </div>
+    <div class="form-group">
+        <label for="name">状态</label>
+        @Html.DropDownListFor(m => m.Status, (IEnumerable<SelectListItem>)ViewBag.StatusType, new { @class = "form-control" })
+    </div>
+    <div class="form-group" style="color:red ">
+        @ViewBag.errorMsg
+    </div>
+    <div>
+        <div>
+            <button type="submit" class="btn btn-primary btn-primary-subbtn">提交</button>
+        </div>
+    </div>
+</div>
+}
+<script>
+    /*自定义validate*/
+    var rules = {
+        PaymentName: {
+            required: true,
+            remote: "/PayMent/ValidateName"
+        },
+        PaymentCode: "required",
+    },
+        messages = {
+            PaymentName: {
+                required: "请输入支付名稱",
+                remote: "已存在支付名稱"
+            },
+            PaymentCode: {
+                required: "请输入支付Code"
+            }
+        };
+        // 在键盘按下并释放及提交后验证提交表单
+        $("form").validate({
+            rules: rules,
+            messages: messages
+        });
+</script>

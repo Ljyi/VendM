@@ -1,0 +1,283 @@
+﻿
+@{
+    ViewBag.Title = "Main";
+}
+<script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/modules/oldie.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+<script src="~/Scripts/Vue/vue.min.js"></script>
+<style>
+    .divblock {
+        width: 20%;
+        height: 150px;
+        margin-left: 50px;
+        float: left;
+        background-color: #f2f2f2;
+        color: #6aaf68;
+        text-align: center;
+        position: relative;
+    }
+
+    .span {
+        border-width: 0px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 58px;
+        width: 100%;
+        height: 22px;
+        font-family: 'PingFangSC-Semibold', 'PingFang SC Semibold', 'PingFang SC';
+        font-weight: 650;
+        font-style: normal;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .number {
+        border-width: 0px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 80px;
+        height: 50px;
+        width: 100%;
+        font-family: 'PingFangSC-Semibold', 'PingFang SC Semibold', 'PingFang SC';
+        font-weight: 650;
+        font-style: normal;
+        font-size: 36px;
+        color: #56AA54;
+        text-align: center;
+    }
+</style>
+<div id="main">
+    <div class="page animation-fade">
+        <div class="page-content">
+            <div id="orderReport" style="width:80%; height:200px">
+                <div class="divblock">
+                    <span class="span">當日訂單數</span><br />
+                    <span class="number" id="todayquantity">{{ todayquantity }}</span>
+                </div>
+                <div class="divblock">
+                    <span class="span"> 當日成交金額(HK$)</span><br />
+                    <span class="number" id="todayamount">{{ todayamount }}</span>
+                </div>
+                <div class="divblock">
+                    <span class="span"> 當月訂單數(HK$)</span><br />
+                    <span class="number" id="monthquantity">{{ monthquantity }}</span>
+                </div>
+                <div class="divblock">
+                    <span class="span"> 當月成交金額(HK$)</span><br />
+                    <span class="number" id="monthamount">{{ monthamount }}</span>
+                </div>
+            </div>
+            <div id="panelSearch" style="height:20px; width: 80%;margin: 0 0 45px 30px;">
+                <div class="col-sm-6 pannel-box">
+                    <div class="col-sm-3">
+                        <select class="form-control selectpicker" id="StoreNo"  v-model="storeSelected">
+                            <option value="">全部Market</option>
+                            <option  v-for="item in storeList" :value="item.Key">{{item.Value}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="MachineNo" class="form-control selectpicker" v-model="machineSelected">
+                            <option value="">全部設備</option>
+                            <option v-for="item in machineList" :value="item.Key">{{item.Value}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-9 pannel-box">
+                        <h4 class="example-title h4-box" style="line-height: 30px;">交易時間</h4>
+                        <input type='text' class="form-control input-box" id='startdate' />-<input type='text' class="form-control input-box" id='enddate'  />
+                    </div>
+                    <button type="button" class="btn btn-primary" data-power="Search" name="search" id="search" style="height:31px" v-on:click="LoadData">
+                        <i class="fa fa-search"></i>&nbsp;查询
+                    </button>
+                </div>
+            </div>
+            <br />
+            <div>
+                <div id="container" style="width:55%;height:350px; margin-left: 50px; float:left"></div>
+                <div id="container" style="width: 25%; height: 350px; margin-left: 50px; float: left">
+                    <p style="font-size: 16px; height: 40px" >排行榜</p>
+                    <p style="font-size: 16px; height: 35px" v-for="(value,key) in rankingList">
+                        {{key + 1}}&nbsp; {{value.StoreName}}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span>{{value.Amount}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(function() {
+        //加载Market
+        $.ajax({
+            method: "Get",
+            url: '../../Order/GetStorelist',
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                if (result.success) {
+                    vm.storeList = result.data;
+                }
+            }
+        });
+        //加载机器
+        $("#StoreNo").change(function () {
+            var code = $("#StoreNo").val();
+            $.ajax({
+                method: "Get",
+                url: '../../Order/GetMachinelist',
+                dataType: "json",
+                data: {
+                    storeCode: code
+                },
+                success: function (result) {
+                    if (result.success) {
+                        //vm.machineList = result.data;
+                        var str = '<option value="">--全部--</option>';
+                        for (var i = 0; i < result.data.length; i++) {
+                            str += '<option value="' + result.data[i].Key + '">' + result.data[i].Value + '</option>';
+                        }
+                        $("#MachineNo").html(str);
+                        $('#MachineNo').selectpicker('refresh');
+                    }
+                }
+            });
+        });
+    });
+    var vm = new Vue({
+        el: "#main",
+        data:
+             {
+             //排行榜
+            rankingList: [],
+                monthamount: "",
+                monthquantity: "",
+                todayquantity: "",
+                todayamount: "",
+                startdate: "",
+                enddate: "",
+                storeno: "",
+                machineno: "",
+                char: "",
+                storeSelected: "",
+                machineSelected :"",
+                storeList: "",
+                machineList: "" 
+        },
+        methods: {
+            LoadData: function () {
+                debugger;
+                $.ajax({
+                    type: 'Post',
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    url: '/OrderReport/MainReportList?startdate=' + $("#startdate").val() + "&enddate=" + $("#enddate").val() + "&storeno=" + $("#StoreNo").val() + "&machineno=" + $("#MachineNo").val(),
+                    success: function (result) {
+                        if (result.Success) {
+                            result = eval("(" + result.Data + ")");
+                            debugger;
+                            vm.char.xAxis[0].setCategories(result.categories);
+                            vm.char.series[0].setData(result.series);
+                            vm.rankingList = result.rankingList;
+                            vm.monthamount = result.monthamount;
+                            vm.monthquantity = result.monthquantity;
+                            vm.todayquantity = result.todayquantity;
+                            vm.todayamount = result.todayamount;
+                        }
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            },
+            LoadDateTime: function () {
+                $("#startdate").datetimepicker({
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    forceParse: 0,
+                    showMeridian: 1,
+                    format: 'yyyy-mm-dd',
+                    minView: "month",
+                    endDate: new Date()
+                }).on('changeDate', function (ev) {
+                    var starttime = $("#startdate").val();
+                    $("#enddate").datetimepicker('setStartDate',starttime);
+                    $(this).datetimepicker('hide');
+                });
+                $("#enddate").datetimepicker({
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    forceParse: 0,
+                    showMeridian: 1,
+                    format: 'yyyy-mm-dd',
+                    minView: "month",
+                    endDate: new Date()
+                }).on('changeDate', function (ev) {
+                    var endtime = $("#enddate").val();
+                    $("#startdate").datetimepicker('setEndDate', endtime);
+                    $(this).datetimepicker('hide');
+                });
+            },
+            LoadChart :function() {
+                this.char = Highcharts.chart('container',
+                    {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: '月平均销量'
+                        },
+                        subtitle: {
+                            text: '数据来源: 塔胡胡'
+                        },
+                        xAxis: {
+                            categories: []
+                        },
+                        yAxis: {
+                            title: {
+                                text: '销量'
+                            }
+                        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    // 开启数据标签
+                                    enabled: true
+                                },
+                                // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+                                enableMouseTracking: false
+                            }
+                        },
+                        series: [
+                            {
+                                name: '订单',
+                                data: []
+                            }
+                        ]
+                    });
+            },
+            LoadStore: function () {
+               
+            },
+            Init: function () {
+               this.LoadDateTime();
+               this.LoadData();
+               this.LoadStore();
+               this.LoadChart();
+            }
+        },
+        mounted() {
+            this.Init();
+        }
+
+    });
+</script>

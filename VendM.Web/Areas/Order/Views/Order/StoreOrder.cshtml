@@ -1,0 +1,375 @@
+﻿
+@{
+    ViewBag.Title = "StoreOrder";
+}
+<div class="page animation-fade">
+    <div class="page-content">
+        <!--高级检索部分-->
+        <div class="panel" id="panelSearch">
+            <div class="panel-heading">
+                <h3 class="panel-title">高级检索</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-sm-3 pannel-box">
+                    <h4 class="example-title h4-box">商品名称</h4>
+                    <input type="text" class="form-control input-box" id="ProductName" placeholder="商品名称">
+                </div>
+                <div class="col-sm-3 pannel-box">
+                    <h4 class="example-title h4-box">Market编号</h4>
+                    <div class="col-sm-7">
+                        <select class="form-control selectpicker" id="StoreNo">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 pannel-box">
+                    <h4 class="example-title h4-box">机器编号</h4>
+                    <div class="col-sm-7">
+                        <select id="MachineNo" class="form-control selectpicker">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 pannel-box">
+                    <h4 class="example-title h4-box">日期</h4>
+                    <input type='text' class="form-control input-box" id='dateFrom' />-<input type='text' class="form-control input-box" id='dateTo' />
+                </div>
+            </div>
+        </div>
+        <!--列表-->
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="col-sm-12 pl-25 pr-25 pt-15 pb-10">
+                    <button type="button" class="btn btn-primary" onclick="window.location=window.location">
+                        <i class="fa fa-rotate-right"></i>&nbsp;刷新
+                    </button>
+                    <button type="button" class="btn btn-primary" data-power="Search" name="search" id="search">
+                        <i class="fa fa-search"></i>&nbsp;查询
+                    </button>
+                    <button class="btn btn-primary" data-power="GetExcel" name="getExcel" id="exportExcel">
+                        <i class="fa fa-file-excel-o"></i>&nbsp;导出 Excel
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body container-fluid pb-0">
+                <!--表格-->
+                <table class="bootstrap-table" data-show-columns="false" id="StoreOrderView"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#dateFrom").datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        }).on('changeDate', function (ev) {
+            $(this).datetimepicker('hide');
+        });
+        $("#dateTo").datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        }).on('changeDate', function (ev) {
+            $(this).datetimepicker('hide');
+        });
+        //查询
+        $("#search").on('click', function () {
+            $("#StoreOrderView").bootstrapTable('refresh', { url: '/Order/Order/GetStoreOrderViewGrid' });
+        });
+        //浏览
+        $("#browse").on('click', function () {
+            debugger;
+            var id = $.map($('#StoreOrderView').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            if (id.length != 1) {
+                layer.msg('请选中一行', {
+                    time: 4000,
+                });
+            } else {
+                BrowseOrder(id);
+            }
+        });
+        //删除
+        $("#delete").on('click', function () {
+            var ids = $.map($('#StoreOrderView').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            if (ids.length < 1) {
+                layer.msg('请至少选中一行', {
+                    time: 4000, //20s后自动关闭
+                });
+            } else {
+                Delete(ids.join(","));
+            }
+        });
+        //导出
+        $("#exportExcel").on('click', function () {
+            var ids = $.map($('#StoreOrderView').bootstrapTable('getSelections'), function (row) {
+                return row.Id;
+            });
+            debugger;
+            var queryParams = $('#StoreOrderView').bootstrapTable('getOptions');
+            var limit = 1
+            var offset = 1
+            var sort = ''
+            var order = '';
+            Export(ids, limit, offset, sort, order)
+        });
+        //加载机器
+        $.ajax({
+            method: "Get",
+            url: 'GetStorelist',
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                if (result.success) {
+                    var str = '<option value="">--请选择--</option>';
+                    for (var i = 0; i < result.data.length; i++) {
+                        str += '<option value=' + result.data[i].Key + '>' + result.data[i].Value + '</option>';
+                    }
+                    $("#StoreNo").html(str);
+                }
+            }
+        });
+        //加载Market
+        $("#StoreNo").change(function () {
+            var code = $("#StoreNo").val();
+            $.ajax({
+                method: "Get",
+                url: 'GetMachinelist',
+                dataType: "json",
+                data: {
+                    storeCode: code
+                },
+                success: function (result) {
+                    if (result.success) {
+                        var str = '<option value="">--请选择--</option>';
+                        for (var i = 0; i < result.data.length; i++) {
+                            str += '<option value="' + result.data[i].Key + '">' + result.data[i].Value + '</option>';
+                        }
+                        $("#MachineNo").html(str);
+                        $('#MachineNo').selectpicker('refresh');
+                    }
+                }
+            });
+        });
+        //2.初始化Button的点击事件
+        var oButtonInit = new ButtonInit();
+        oButtonInit.Init();
+        var OrderTablets = new OrderTableInit();
+        OrderTablets.Init();
+    });
+    var ButtonInit = function () {
+        var oInit = new Object();
+        var postdata = {};
+        oInit.Init = function () {
+            //初始化页面上面的按钮事件
+        };
+        return oInit;
+    };
+    var OrderTableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#StoreOrderView').bootstrapTable({
+                url: '/Order/Order/GetStoreOrderViewGrid',
+                ajaxOptions: { async: true, timeout: 10000 },
+                method: 'get',
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: false,
+                toolbar: false,                     //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                silentSort: true,
+                sortStable: true,
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                height: "auto",                     //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                  //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                  //是否显示父子表
+                columns: [
+                    {
+                        checkbox: true,
+                        visible: true              //是否显示复选框
+                    },
+                    {
+                        field: 'OrderTime',
+                        title: '日期',
+                        formatter: function (value, row, index) {
+                            return Common.DateFormat(value)
+                        }
+                    },
+                    {
+                        field: 'StoreName',
+                        title: '所在Market',
+                        sortable: true
+                    },
+                    {
+                        field: 'MachineNo',
+                        title: '机器编号',
+                        sortable: true
+                    },
+                    {
+                        field: 'MachineAddress',
+                        title: '設備備註',
+                        sortable: true
+                    },
+                    {
+                        field: 'ProductCode',
+                        title: '产品编码'
+                    },
+                    {
+                        field: 'ProductName',
+                        title: '商品名稱'
+                    },
+                    {
+                        field: 'ImgUrl',
+                        title: '商品图片', formatter: function (value, row, index) {
+                            var returnHtml = '<a class = "view"  href="javascript:void(0)"><img style="width:70;height:30px;"  src="' + value + '" /></a>';
+                            return returnHtml;
+                        },
+                        events: 'imgEvents'
+                    },
+                    {
+                        field: 'OrderQuantity',
+                        title: '订单数量'
+                    },
+                    {
+                        field: 'TotalAmount',
+                        title: '订单金额'
+                    },
+                    {
+                        field: 'TotalPoint',
+                        title: '积分'
+                    },
+                    {
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            // var returnHtml = '<a href="" >订单明细</a>';
+                            debugger;
+                            var returnHtml = '<a class="alink" onclick="GetStoreOrderDetail(' + JSON.stringify(row).replace(/\"/g, "'") + ')" href="javascript:void(0);">订单明细</a>';
+
+                            return returnHtml;
+                        }
+                    }
+                ]
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                sort: params.sort,      //排序列名
+                sortOrder: params.order, //排位命令（desc，asc）
+                orderNo: $("#OrderNo").val(), //订单编号
+                storeNo: $("#StoreNo").val(), //Market编号
+                machineNo: $("#MachineNo").val(), //机器编号
+                productName: $("#ProductName").val(), //产品名称
+                dateFrom: $("#dateFrom").val(),//开始时间
+                dateTo: $("#dateTo").val()//结束时间
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+</script>
+
+<script>
+    var GetStoreOrderDetail = function (row) {
+        var orderTime = Common.DateFormat(row.OrderTime);
+        var productCode = row.ProductCode;
+        var storeName = row.StoreName;
+        var machineNo = row.MachineNo;
+        var machineAddress = row.MachineAddress;
+        layer.open({
+            type: 2,
+            title: '订单明细列表',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['85%', '45%'],
+            content: 'StoreOrderDetail?orderTime=' + orderTime + '&productCode=' + productCode + '&storeName=' + storeName + '&machineNo=' + machineNo + '&machineAddress=' + machineAddress
+        });
+    }
+
+     //导出
+    var Export = function (ids, limit, offset, sort, order) {
+        $.ajax({
+            type: "Post",
+            url: '@Url.Action("StoreOrderViewExportExcel", "Order", new { area = "Order" })',
+            dataType: "json",
+            data: {
+                ids: ids,
+                limit: limit,   //页面大小
+                offset: offset,  //页码
+                sort: sort,      //排序列名
+                sortOrder: order, //排位命令（desc，asc）
+                orderNo: $("#OrderNo").val(), //订单编号
+                storeNo: $("#StoreNo").val(), //Market编号
+                machineNo: $("#MachineNo").val(), //机器编号
+                dateFrom: $("#dateFrom").val(),//开始时间
+                dateTo: $("#dateTo").val()//结束时间
+            },
+            success: function (result) {
+                if (result.Success) {
+                    window.location.target = "_blank";
+                    window.location.href = result.Data;
+                } else {
+                    layer.open({
+                        title: '提示',
+                        content: result.ErrorMsg,
+                        move: false,
+                        btn: "知道了"
+                    });
+                }
+            }
+        })
+    }
+    window.imgEvents = {
+        'click .view': function (e, value, row, index) {
+            var json = [];
+                json.push({
+                    "alt": "图片" + index,
+                    "pid": index, //图片id
+                    "src": value //原图地址
+                });
+            layer.photos({
+                photos: {
+                    "title": "照片", //相册标题
+                    "id": 1, //相册id
+                    "start": 0, //初始显示的图片序号，默认0
+                    "data": json//相册包含的图片，数组格式
+                }
+            });
+        }
+    };
+</script>
+

@@ -1,0 +1,50 @@
+﻿
+@model  VendM.Model.DataModelDto.RoleDto
+@{
+    ViewBag.Title = "Add";
+}
+@using (Html.BeginForm("Add", "Role", FormMethod.Post))
+{
+<div style=" margin:15px; border:1px">
+    <div class="form-group">
+        <label for="name">角色名称</label>
+        @*<input type="text" class="form-control" id="UserName" placeholder="请输入角色名称" required>*@
+        @Html.TextBoxFor(m => m.RoleName, new { @class = "form-control", placeholder = "请输入角色名称", required = "required" })
+    </div>
+    <div class="form-group">
+        <label for="name">状态</label>
+        <select name="Status" id="Status" class="form-control" label="State:" labelPosition="top" style="width:100%;">
+            <option value="N">正常</option>
+            <option value="A">非正常</option>
+        </select>
+    </div>
+    <div style="margin-left:70%">
+        <button type="submit" class="btn btn-primary">提交</button>
+    </div>
+</div>
+}
+<script>
+    $().ready(function () {
+        // 在键盘按下并释放及提交后验证提交表单
+        $("form").validate({
+            //messages: {
+            //    UserName: {
+            //        required: "请输入用户名",
+            //        //   minlength: "用户名必需由两个字母组成"
+            //    },
+            //    Password: {
+            //        required: "请输入密码",
+            //        minlength: "密码长度不能小于 5 个字母"
+            //    },
+            //    LoginName: {
+            //        required: "请输入登录账号",
+            //        minlength: "密码长度不能小于 5 个字母",
+            //    },
+            //    Email: {
+            //        required: "请输入密码",
+            //        minlength: "密码长度不能小于 5 个字母",
+            //    }
+            //}
+        });
+    });
+</script>

@@ -1,0 +1,74 @@
+﻿
+@model  VendM.Model.DataModel.SysMenu
+@{
+    ViewBag.Title = "Add";
+}
+@using (Html.BeginForm("Add", "Menu", FormMethod.Post))
+{
+    <div style=" margin:15px; border:1px">
+        <div class="form-group">
+            <label for="name">父级菜单</label>
+            @Html.DropDownListFor(m => m.ParentId, ViewData["ParentList"] as List<SelectListItem>, new { @class = "form-control", placeholder = "父级菜单", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">菜单编码</label>
+            @Html.TextBoxFor(m => m.MenuCode, new { @class = "form-control", placeholder = "请输入菜单编码", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">菜单名称</label>
+            @Html.TextBoxFor(m => m.MenuName, new { @class = "form-control", placeholder = "请输入菜单名称", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">菜单Url</label>
+            @Html.TextBoxFor(m => m.Url, new { @class = "form-control", placeholder = "请输入菜单 /Admin/User/Index", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">菜单级别</label>
+            @Html.TextBoxFor(m => m.MenuLevel, new { @class = "form-control", placeholder = "请输入菜单级别 1,2,3,4", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">图标</label>
+            @Html.TextBoxFor(m => m.Icon, "fa fa-cog fa-lg", new { @class = "form-control", placeholder = "请输入图标" })
+        </div>
+        <div class="form-group">
+            <label for="name">菜单排序</label>
+            @Html.TextBoxFor(m => m.SortNumber, new { @class = "form-control", placeholder = "请输入菜单排序 1,2,3,4", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">状态</label>
+            <select name="Status" id="Status" class="form-control" label="State:" labelPosition="top" style="width:100%;">
+                <option value="1">开启</option>
+                <option value="0">关闭</option>
+            </select>
+        </div>
+        <div style="margin-left:70%">
+            <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+    </div>
+}
+<script>
+    $().ready(function () {
+        // 在键盘按下并释放及提交后验证提交表单
+        $("form").validate({
+            //messages: {
+            //    UserName: {
+            //        required: "请输入用户名",
+            //        //   minlength: "用户名必需由两个字母组成"
+            //    },
+            //    Password: {
+            //        required: "请输入密码",
+            //        minlength: "密码长度不能小于 5 个字母"
+            //    },
+            //    LoginName: {
+            //        required: "请输入登录账号",
+            //        minlength: "密码长度不能小于 5 个字母",
+            //    },
+            //    Email: {
+            //        required: "请输入密码",
+            //        minlength: "密码长度不能小于 5 个字母",
+            //    }
+            //}
+        });
+    });
+</script>
+

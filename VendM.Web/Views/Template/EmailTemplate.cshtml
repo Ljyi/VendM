@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <style type="text/css">
+        table.altrowstable {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #a9c6c9;
+            border-collapse: collapse;
+        }
+
+            table.altrowstable th {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #a9c6c9;
+            }
+
+            table.altrowstable td {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #a9c6c9;
+            }
+
+        .oddrowcolor {
+            background-color: #d4e3e5;
+        }
+
+        .evenrowcolor {
+            background-color: #c3dde0;
+        }
+    </style>
+    <table class="altrowstable" id="alternatecolor">
+        <caption align="top"><h2>售貨機補貨單</h2></caption>
+        @foreach (var item in Model as List<VendM.Model.TemplateModel.SendEmail>)
+        {
+            <tr>
+                <th>設備基本信息</th>
+                <th>機器編號：@item.MachineNo</th>
+                <th>所在Market：@item.Name</th>
+                <th>設備備注：@item.Address</th>
+                <th>清單日期：@DateTime.Now.ToString("yyyy-MM-dd")</th>
+            </tr>
+            <tr>
+                <th>商品編號</th>
+                <th>商品名稱</th>
+                <th>貨道號</th>
+                <th>貨道庫存</th>
+                <th>機内庫存</th>
+            </tr>
+            int i = 0;
+            string className;
+            foreach (var lisItem in item.ReplenishmentLis)
+            {
+                foreach (var dItem in lisItem.ReplenishmentDetails)
+                {
+                    className = i % 2 == 0 ? "evenrowcolor" : "oddrowcolor";
+                    <tr class="@className">
+                        <td>@dItem.ProductNo</td>
+                        <td>@dItem.ProductName</td>
+                        <td>@dItem.PassageNumber</td>
+                        <td>@dItem.TotalQuantity</td>
+                        <td>@dItem.InventoryQuantity</td>
+                    </tr>
+                    i++;
+                }
+            }
+
+        }
+    </table>
+
+</body>
+</html>
+

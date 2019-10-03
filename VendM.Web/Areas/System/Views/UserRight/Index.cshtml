@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<div class="page animation-fade">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-sm-10 offset-sm-1 row" style="margin-left:0px">
+                <!--检索面板-->
+                <div class="col-sm-6">
+                    <div class="panel" id="panelSearch">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">高级检索</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-3 pannel-box">
+                                <h4 class="example-title h4-box">用户名</h4>
+                                <input type="text" class="form-control input-box" id="UserName" placeholder="请输入用户名称">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-power="Search" name="search" id="search">
+                            <i class="fa fa-search"></i>&nbsp;查询
+                        </button>
+                    </div>
+                    <div class="panel" style="height:calc(100vh - 52px)">
+                        <div class="panel-body" style="height:calc(100vh - 160px); overflow-y:auto;">
+                            <table class="bootstrap-table" data-show-columns="false" id="userTable"></table>
+                        </div>
+                    </div>
+                </div>
+                <!--树-->
+                <div class="col-sm-6">
+                    <div class="panel" style="height:calc(100vh - 52px)">
+                        <div class="panel-heading">
+                            <h4>请勾选权限</h4>
+                        </div>
+                        <div class="panel-body" style="height:calc(100vh - 160px); overflow-y:auto;">
+                            <!--标签树-->
+                            <ul id="tree" class="ztree"></ul>
+                        </div>
+                        <div class="panel-footer text-right">
+                            <button class="btn btn-primary" onclick="App.Save()">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="~/Scripts/icheck/skins/all.css" rel="stylesheet" />
+<link href="~/Scripts/zTree/css/metroStyle/metroStyle.css" rel="stylesheet" />
+<script src="~/Scripts/zTree/js/jquery.ztree.all.min.js"></script>
+<script src="~/Scripts/icheck/icheck.min.js"></script>
+<style type="text/css">
+    .panel {
+        padding: 20px;
+    }
+</style>
+<script type="text/javascript">
+    var userId;
+    $(function () {
+        $("#search").on('click', function () {
+            $("#userTable").bootstrapTable('refresh', { url: '/User/GetUserGrid' });
+        });
+        $('input[type=radio]').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass: 'iradio_flat-green'
+        });
+        //加载默认click 第一个 角色
+        $("#table-roles .radio:first label").click();
+        //用户
+        //1.初始化用户Table
+        var userTablets = new userTableInit();
+        userTablets.Init();
+    });
+    var userTableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#userTable').bootstrapTable({
+                url: '/System/User/GetUserGrid',
+                ajaxOptions: { async: true, timeout: 10000 },
+                method: 'get',
+                striped: false,
+                toolbar: false,                     //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                silentSort: true,
+                sortStable: true,
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                height: "auto",                     //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                  //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                  //是否显示父子表
+                columns: [
+                    {
+                        checkbox: true,
+                        visible: true              //是否显示复选框
+                    },
+                    {
+                        field: 'UserName',
+                        title: '用户名称'
+                    },
+                    {
+                        field: 'LogingName',
+                        title: '登录名称'
+                    },
+                    {
+                        field: 'Email',
+                        title: '邮箱'
+                    }
+                ],
+                onClickRow: function (row, $element) {
+                    GetUserMenuFunctionTree(row.Id);
+                },
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                sort: params.sort,      //排序列名
+                sortOrder: params.order, //排位命令（desc，asc）
+                username: $("#UserName").val(),
+                logingname: $("#LogingName").val()
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+    var GetUserMenuFunctionTree = function (id) {
+        $.ajax({
+            type: 'Post',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            url: "@Url.Action("GetUserMenuFunctionTree")",
+            data: JSON.stringify({ userId: id }),
+            success: function (r) {
+                var setting = {
+                    check: {
+                        enable: true,
+                        chkboxType: { "Y": "ps", "N": "ps" }
+                    },
+                    view: {
+                        dblClickExpand: true
+                    },
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            idKey: "id",
+                            pIdKey: "pId",
+                            rootPId: 0,
+                        },
+                        key: { checked: 'checked' }
+                    },
+                    callback: {
+                        onClick: function (event, treeId, treeNode) {
+                            var treeObj = $.fn.zTree.getZTreeObj("tree");
+                            if (treeNode.checked == false && treeNode.tag == "fun") {
+                                treeObj.checkNode(treeNode, true, true);
+                            } else {
+                                treeObj.checkNode(treeNode, false, false);
+                            }
+                        },
+                    }
+                };
+                zTree = $.fn.zTree.init($("#tree"), setting, r.value);
+                zTree.expandAll(true);//展开所有
+            }
+        });
+    };
+
+    var Save = function () {
+        var treeObj = $.fn.zTree.getZTreeObj("tree");
+        var nodes = treeObj.getCheckedNodes(true);
+        var array = [];
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].tag == "MenuFunction") {
+                array.push({
+
+                    RoleMenuFunction_RoleID: _roleid,
+                    RoleMenuFunction_FunctionID: nodes[i].id,
+                    RoleMenuFunction_MenuID: nodes[i].pId
+                });
+            }
+        }
+        //保存功能
+        $.ajax({
+            type: 'Post',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            url: "@Url.Action("Save")",
+            data: {
+                Sys_RoleMenuFunction_List: JSON.stringify(array),
+                RoleId: _roleid
+            },
+            success: function (r) {
+                if (r.status == 1) {
+                    App.GetRoleMenuFunctionTree(_roleid);
+                    admin.msg("保存成功!", "成功");
+                }
+            }
+        });
+    };
+
+</script>
+
+

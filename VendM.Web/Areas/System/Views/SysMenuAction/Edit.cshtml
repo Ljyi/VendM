@@ -1,0 +1,185 @@
+﻿
+@model  VendM.Model.DataModelDto.SysMenuActionDto
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm())
+{
+    <div style=" margin:15px; border:1px">
+        <div class="form-group">
+            <label for="name">按钮</label>
+            @Html.DropDownListFor(m => m.SysButtonId, (IEnumerable<SelectListItem>)ViewBag.ButtonList, new { @class = "form-control", placeholder = "按钮", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">控制器名称</label>
+            @Html.TextBoxFor(m => m.ControlName, Model.ControlName, new { @class = "form-control", placeholder = "请输入控制器名称", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">控制器方法</label>
+            @Html.TextBoxFor(m => m.ActionName, Model.ActionName, new { @class = "form-control", placeholder = "请输入控制器方法", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">权限编码</label>
+            @Html.TextBoxFor(m => m.AuthorizeCode, Model.AuthorizeCode, new { @class = "form-control", placeholder = "权限编码", required = "required" })
+            @Html.HiddenFor(m => m.Id)
+        </div>
+        <div class="form-group">
+            <label for="name">状态</label>
+            <select name="Status" id="Status" class="form-control" label="State:" labelPosition="top" style="width:100%;">
+                <option value="1">开启</option>
+                <option value="0">关闭</option>
+            </select>
+        </div>
+        <div style="margin-left:70%">
+            <button type="submit" id="saveButton" class="btn btn-primary">提交</button>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function validform() {
+        /*自定义validate*/
+        return $("form").validate({
+         rules : {
+            ActionName: {
+                required: true,
+                remote: {
+                    url: "ValidateActionName?controlName=" + $("#ControlName").val() + "&actionName=" + $("#ActionName").val() + "&id=" + $("#Id").val(), //后台处理程序
+                    type: "get", //数据发送方式
+                    dataType: "json", //接受数据格式
+                    async: false,
+                    data: { //要传递的数据
+                        ActionName: function () {
+                            return $("#ActionName").val();
+                        }
+                    },
+                    dataFilter: function (data) {
+                        debugger;
+                        if (data != "false") {
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                }
+            },
+            SysButtonId: { required: true, min: 0 },
+            ControlName: { required: true },
+            AuthorizeCode: {
+                required: true,
+                remote: {
+                    url: "ValidateAuthorizeCode?controlName=" + $("#ControlName").val() + "&authorizeCode=" + $("#AuthorizeCode").val() + "&id=" + $("#Id").val(), //后台处理程序
+                    type: "get", //数据发送方式
+                    dataType: "json", //接受数据格式
+                    async: false,
+                    data: { //要传递的数据
+                        AuthorizeCode: function () {
+                            return $("#AuthorizeCode").val();
+                        }
+                    },
+                    dataFilter: function (data) {
+                        if (data != "false") {
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                }
+            }
+        },
+         messages : {
+            SysButtonId: {
+                required: "请选择按钮"
+            },
+            ControlName: {
+                required: "请输入控制器名称",
+            },
+            ActionName: {
+                required: "请输入控制器方法",
+            },
+            AuthorizeCode: {
+                required: "权限编码"
+            }
+            }
+        })
+    }
+    //注册表单验证
+    $(validform());
+    $(document).ready(function () {
+        $("#ControlName").val('@ViewBag.ControlName');
+        $("#SysButtonId").on('change', function () {
+            var buttonId = parseInt($(this).val());
+            $.ajax({
+                type: 'get',
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data:{ buttonId: buttonId },
+                async: true,
+                url: '/System/SysMenuAction/GetButtonInfo',
+                success: function (result) {
+                    if (result.Success) {
+                        var data= JSON.parse(result.Data)
+                        $("#ActionName").val(data.ButtonCode);
+                        var code = '@ViewBag.ControlCode' + '-' + data.ButtonCode;
+                             $("#AuthorizeCode").val(code);
+                    } else {
+                        layer.open({
+                            title: '提示',
+                            content: '选中失败！',
+                            move: false,
+                            btn: "知道了"
+                        });
+                    }
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+            })
+
+        });
+        //保存
+        $("#saveButton").on('click', function () {
+            if (validform().form()) {
+            var data = {};
+            data.Id = $("#Id").val();
+            data.SysMenuId=@ViewBag.SysMenuId;
+            data.SysButtonId = $("#SysButtonId").val();
+            data.ControlName = $("#ControlName").val();
+            data.ActionName = $("#ActionName").val();
+            data.AuthorizeCode = $("#AuthorizeCode").val();
+            data.Status = $("#Status").val();
+            debugger;
+            $.ajax({
+                type: 'Post',
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ sysMenuActionDto: data }),
+                async: false,
+                url: '/System/SysMenuAction/Edit',
+                success: function (result) {
+                    if (result.Success) {
+                        layer.msg('保存成功！', {
+                            time: 30000,
+                        });
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);//关闭当前页
+                        $("#sysMenuActionTable").bootstrapTable('refresh', { url: '/System/SysMenuAction/GetSysMenuActionGrid' });
+                    } else {
+                        layer.open({
+                            title: '提示',
+                            content: '添加失败！',
+                            move: false,
+                            btn: "知道了"
+                        });
+                    }
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+            })
+            }
+        });
+    });
+</script>
+

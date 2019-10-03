@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link href="~/Content/core.css" rel="stylesheet" />
+    <link href="~/Content/site.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/Content/validation.css" rel="stylesheet" />
+    <link href="~/Scripts/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Scripts/layer/layui.css" rel="stylesheet" />
+    <!--基础js-->
+    <script src="~/Scripts/jquery-3.2.1.min.js"></script>
+    <script src="~/Scripts/popper.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-table/bootstrap-table.js"></script>
+    <script src="~/Scripts/bootstrap-table/bootstrap-table-zh-CN.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/layer/layui.js"></script>
+    <script src="~/Scripts/common.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker/js/moment-with-locales.min-2.18.1.js"></script>
+    <script src="~/Scripts/i18n/jquery.i18n.properties.js"></script>
+    <link href="~/Scripts/bootstrap-select-1.13.9/css/bootstrap-select.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-select-1.13.9/js/bootstrap-select.min.js"></script>
+    <!--文件上传-->
+    <script src="~/Scripts/webuploader/js/webuploader.js"></script>
+    <link href="~/Scripts/webuploader/css/webuploader.css" rel="stylesheet" />
+    <script src="~/Scripts/webuploader/js/upload.js"></script>
+    <!--文件上传-->
+    @*<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+        <script src="~/Scripts/plugins/uploadify/jquery.uploadify.min.js"></script>
+        <link href="~/Scripts/plugins/uploadify/uploadify.css" rel="stylesheet" />*@
+    <!--my css-->
+    <link href="~/Content/main.css" rel="stylesheet" />
+
+    @RenderSection("css", required: false)
+</head>
+<body class="@ViewBag.BodyClass">
+    @RenderBody()
+    @RenderSection("js", required: false)
+    @*@StackExchange.Profiling.MiniProfiler.RenderIncludes()*@
+</body>
+</html>

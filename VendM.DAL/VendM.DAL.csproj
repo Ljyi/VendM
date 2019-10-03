@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FEA57B66-DA8F-4632-91B2-D6D00C8A9929}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VendM.DAL</RootNamespace>
+    <AssemblyName>VendM.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit.EntityFramework, Version=1.1.16.0, Culture=neutral, PublicKeyToken=b6c8cfc71f7a6a80, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.EntityFramework.1.1.16\lib\net45\LinqKit.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.9.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.1.9.1\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="DatabaseInitialize.cs" />
+    <Compile Include="DBErrorType.cs" />
+    <Compile Include="Migrations\201905300851422_InitialCreate.cs" />
+    <Compile Include="Migrations\201905300851422_InitialCreate.Designer.cs">
+      <DependentUpon>201905300851422_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905310829468_addMachineDetail.cs" />
+    <Compile Include="Migrations\201905310829468_addMachineDetail.Designer.cs">
+      <DependentUpon>201905310829468_addMachineDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906030228006_modifMachine.cs" />
+    <Compile Include="Migrations\201906030228006_modifMachine.Designer.cs">
+      <DependentUpon>201906030228006_modifMachine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906030230081_addReplenishmentUser.cs" />
+    <Compile Include="Migrations\201906030230081_addReplenishmentUser.Designer.cs">
+      <DependentUpon>201906030230081_addReplenishmentUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906030552177_modifyTable.cs" />
+    <Compile Include="Migrations\201906030552177_modifyTable.Designer.cs">
+      <DependentUpon>201906030552177_modifyTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906060821320_modifyReplenishmentUser.cs" />
+    <Compile Include="Migrations\201906060821320_modifyReplenishmentUser.Designer.cs">
+      <DependentUpon>201906060821320_modifyReplenishmentUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906170836376_addApiLog.cs" />
+    <Compile Include="Migrations\201906170836376_addApiLog.Designer.cs">
+      <DependentUpon>201906170836376_addApiLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906180602161_modfyApiLog.cs" />
+    <Compile Include="Migrations\201906180602161_modfyApiLog.Designer.cs">
+      <DependentUpon>201906180602161_modfyApiLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906200630068_addReplenishment.cs" />
+    <Compile Include="Migrations\201906200630068_addReplenishment.Designer.cs">
+      <DependentUpon>201906200630068_addReplenishment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906211010016_addMessageQueue.cs" />
+    <Compile Include="Migrations\201906211010016_addMessageQueue.Designer.cs">
+      <DependentUpon>201906211010016_addMessageQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906240406492_modifMessageQueue.cs" />
+    <Compile Include="Migrations\201906240406492_modifMessageQueue.Designer.cs">
+      <DependentUpon>201906240406492_modifMessageQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907010709492_addSysMenuAction.cs" />
+    <Compile Include="Migrations\201907010709492_addSysMenuAction.Designer.cs">
+      <DependentUpon>201907010709492_addSysMenuAction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907020931176_modifUser.cs" />
+    <Compile Include="Migrations\201907020931176_modifUser.Designer.cs">
+      <DependentUpon>201907020931176_modifUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907030320582_modifproduct.cs" />
+    <Compile Include="Migrations\201907030320582_modifproduct.Designer.cs">
+      <DependentUpon>201907030320582_modifproduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907030741311_modifSysMenuAction.cs" />
+    <Compile Include="Migrations\201907030741311_modifSysMenuAction.Designer.cs">
+      <DependentUpon>201907030741311_modifSysMenuAction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907030840045_modifSysMenuAction1.cs" />
+    <Compile Include="Migrations\201907030840045_modifSysMenuAction1.Designer.cs">
+      <DependentUpon>201907030840045_modifSysMenuAction1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907040711350_modifSysMenuAction2.cs" />
+    <Compile Include="Migrations\201907040711350_modifSysMenuAction2.Designer.cs">
+      <DependentUpon>201907040711350_modifSysMenuAction2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907050722458_modifSysMenuAction11.cs" />
+    <Compile Include="Migrations\201907050722458_modifSysMenuAction11.Designer.cs">
+      <DependentUpon>201907050722458_modifSysMenuAction11.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907120922432_modifTransaction.cs" />
+    <Compile Include="Migrations\201907120922432_modifTransaction.Designer.cs">
+      <DependentUpon>201907120922432_modifTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907170717276_modifyProduct.cs" />
+    <Compile Include="Migrations\201907170717276_modifyProduct.Designer.cs">
+      <DependentUpon>201907170717276_modifyProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907220210077_modifyOrder.cs" />
+    <Compile Include="Migrations\201907220210077_modifyOrder.Designer.cs">
+      <DependentUpon>201907220210077_modifyOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907260931054_AddAPP.cs" />
+    <Compile Include="Migrations\201907260931054_AddAPP.Designer.cs">
+      <DependentUpon>201907260931054_AddAPP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909230750113_ModifyProduct1.cs" />
+    <Compile Include="Migrations\201909230750113_ModifyProduct1.Designer.cs">
+      <DependentUpon>201909230750113_ModifyProduct1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SysPara\DBType.cs" />
+    <Compile Include="UnitOfWork\DbContextFactory.cs" />
+    <Compile Include="UnitOfWork\IRepository.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWorkContext.cs" />
+    <Compile Include="UnitOfWork\RepositoryBase.cs" />
+    <Compile Include="UnitOfWork\UnitOfWorkContextBase.cs" />
+    <Compile Include="VendMDbContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VendM.Core\VendM.Core.csproj">
+      <Project>{694434e6-0ad9-44e4-a046-f51aed1cb561}</Project>
+      <Name>VendM.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VendM.Model\VendM.Model.csproj">
+      <Project>{84b07ff9-cdb1-4ebb-bc6a-b97e7d560c58}</Project>
+      <Name>VendM.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201905300851422_InitialCreate.resx">
+      <DependentUpon>201905300851422_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905310829468_addMachineDetail.resx">
+      <DependentUpon>201905310829468_addMachineDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906030228006_modifMachine.resx">
+      <DependentUpon>201906030228006_modifMachine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906030230081_addReplenishmentUser.resx">
+      <DependentUpon>201906030230081_addReplenishmentUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906030552177_modifyTable.resx">
+      <DependentUpon>201906030552177_modifyTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906060821320_modifyReplenishmentUser.resx">
+      <DependentUpon>201906060821320_modifyReplenishmentUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906170836376_addApiLog.resx">
+      <DependentUpon>201906170836376_addApiLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906180602161_modfyApiLog.resx">
+      <DependentUpon>201906180602161_modfyApiLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906200630068_addReplenishment.resx">
+      <DependentUpon>201906200630068_addReplenishment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906211010016_addMessageQueue.resx">
+      <DependentUpon>201906211010016_addMessageQueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906240406492_modifMessageQueue.resx">
+      <DependentUpon>201906240406492_modifMessageQueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907010709492_addSysMenuAction.resx">
+      <DependentUpon>201907010709492_addSysMenuAction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907020931176_modifUser.resx">
+      <DependentUpon>201907020931176_modifUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907030320582_modifproduct.resx">
+      <DependentUpon>201907030320582_modifproduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907030741311_modifSysMenuAction.resx">
+      <DependentUpon>201907030741311_modifSysMenuAction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907030840045_modifSysMenuAction1.resx">
+      <DependentUpon>201907030840045_modifSysMenuAction1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907040711350_modifSysMenuAction2.resx">
+      <DependentUpon>201907040711350_modifSysMenuAction2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907050722458_modifSysMenuAction11.resx">
+      <DependentUpon>201907050722458_modifSysMenuAction11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907120922432_modifTransaction.resx">
+      <DependentUpon>201907120922432_modifTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907170717276_modifyProduct.resx">
+      <DependentUpon>201907170717276_modifyProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907220210077_modifyOrder.resx">
+      <DependentUpon>201907220210077_modifyOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907260931054_AddAPP.resx">
+      <DependentUpon>201907260931054_AddAPP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909230750113_ModifyProduct1.resx">
+      <DependentUpon>201909230750113_ModifyProduct1.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

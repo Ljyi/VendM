@@ -1,0 +1,41 @@
+﻿
+@model VendM.Model.DataModelDto.ReplenishmentUserDto
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("form").validate();
+    });
+</script>
+@using (Html.BeginForm())
+{
+<div style="margin: 15px; border: 1px">
+    <div class="form-group">
+        <label for="name">補貨員編號</label>
+        @Html.TextBoxFor(m => m.ReplenishmentUserNo, new { @class = "form-control", placeholder = "補貨員編號", required = "required" })
+    </div>
+    <div class="form-group">
+        <label for="name">補貨員名稱</label>
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "補貨員名稱", required = "required" })
+    </div>
+    <div class="form-group">
+        <label for="name">補貨員郵箱</label>
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "補貨員郵箱", required = "required" })
+    </div>
+    <div class="form-group">
+        <label for="name">補貨員狀態</label>
+        @Html.DropDownListFor(m => m.Status, (IEnumerable<SelectListItem>)ViewBag.StatusType, new { @class = "form-control" })
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary btn-primary-subbtn">提交</button>
+    </div>
+</div>
+}
+
+
+
+
+

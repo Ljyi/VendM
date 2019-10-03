@@ -1,0 +1,98 @@
+﻿
+@model VendM.Model.DataModelDto.StoreDto
+@{
+    ViewBag.Title = "Edit";
+}
+
+@*<script type="text/javascript">
+    /*自定义validate*/
+    var rules = {
+        Address: {
+            maxlength:100
+        }
+    },
+        messages = {
+            Address: {
+                maxlength:"地址最大长度100"
+            }
+        };
+    $("form").validate({
+        rules: rules,
+        messages: messages
+    });
+</script>*@
+@using (Html.BeginForm())
+{
+    <div style="margin: 15px; border: 1px">
+        <div class="form-group">
+            <label for="name">Market名称</label>
+            @*<input type="text" class="form-control" id="UserName" placeholder="Market名称" required>*@
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Market名稱", required = "required" })
+        </div>
+        <div class="form-group">
+            <label for="name">Market编号</label>
+            @*<input type="text" class="form-control" id="LoginName" placeholder="Market编号" required>*@
+            @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = "Market编号", required = "required", @readonly = true })
+        </div>
+        <div class="form-group">
+            <label for="name">Market狀態</label>
+            @Html.DropDownListFor(m => m.Status, (IEnumerable<SelectListItem>)ViewBag.StatusType, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label for="name">地址</label>
+            @*<input type="text" class="form-control" id="Email" placeholder="地址" required>*@
+            @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "地址", required = "required" })
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary btn-primary-subbtn">提交</button>
+        </div>
+    </div>
+}
+<script>
+    /*自定义validate*/
+    var rules = {
+        //Name: {
+        //    required: true,
+        //    remote: "/Store/ValidateName"
+        //},
+        Code: {
+            required: true
+        },
+        Address: {
+            required: true,
+            maxlength:100
+        },
+        MerchantId: {
+            required: true,
+            min: 0
+        }
+        //,
+        //StoreType: {
+        //    required: true,
+        //    minlength: 0
+        //}
+    },
+        messages = {
+            Name: {
+                required: "请输入Market名稱",
+                remote: "Market名稱已存在"
+            },
+            Code: {
+                required: "请输入您的Market编号"
+            },
+            Address: {
+                required: "请输入您的地址",
+                maxlength:"地址最大长度100"
+            }
+        };
+    $(document).ready(function () {
+        // 在键盘按下并释放及提交后验证提交表单
+        $("form").validate({
+            rules: rules,
+            messages: messages
+        });
+    });
+</script>
+
+
+

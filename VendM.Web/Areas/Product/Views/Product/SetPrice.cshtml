@@ -1,0 +1,100 @@
+﻿
+@model  VendM.Model.DataModel.Product.ProductPriceDto
+@{
+    ViewBag.Title = "SetPrice";
+}
+@using (Html.BeginForm())
+{
+    <div style=" margin:15px; border:1px">
+        <div class="form-group">
+            <input type="Checkbox" value="" id="ProductPriceChK" checked="checked">纯金额兑换
+            @Html.TextBoxFor(m => m.Price, new { @class = "form-control", placeholder = "商品價格", required = "required", disabled = "true", value = "" })
+        </div>
+        <div class="form-group">
+            <input type="Checkbox" value="" id="AllIntegralChk" checked="checked">纯積分兑换
+            @Html.TextBoxFor(m => m.Point, new { @class = "form-control", placeholder = "積分數", required = "required", disabled = "true", value = "" })
+        </div>
+        <div class="form-group">
+            <input type="Checkbox" value="" id="PartChk" checked="checked">部分積分+金額兌換
+            @Html.TextBoxFor(m => m.PartPoint, new { @class = "form-control ", placeholder = "部分積分兌換", required = "required", disabled = "true", value = "" })
+            <span>+</span>
+            @Html.TextBoxFor(m => m.PartPrice, new { @class = "form-control", placeholder = "部分金額兌換", required = "required", disabled = "true", value = "" })
+            @Html.HiddenFor(m => m.Id)
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary btn-primary-subbtn">提交</button>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    
+    var jsondata = @Html.Raw(Json.Encode(ViewBag.Model));
+    var rules =
+    {
+        Price: { required: true, number: true, min: 0 },
+        Point: { required: true, number: true, min: 0 },
+        PartPoint: { required: true, number: true, min: 0 },
+        PartPrice: { required: true, number: true, min: 0 },
+    },
+        messages = {
+            Price: {
+                required: "请输入商品價格",
+                min: "请输入商品價格應大于0"
+            },
+            Point: {
+                required: "请输入全部兌換所需積分",
+                min: "積分應大于0"
+            },
+            PartPoint: {
+                required: "部分積分",
+                min: "部分積分應大于0"
+            },
+            PartPrice: {
+                required: "部分金額",
+                min: "部分金額應大于0"
+            }
+        };
+    $(document).ready(function () {
+
+        CheckBoxChange();
+
+        // 在键盘按下并释放及提交后验证提交表单
+        $("form").validate({
+            rules: rules,
+            messages: messages
+        });
+    });
+     var CheckBoxChange = function () {
+        $("#ProductPriceChK").attr("checked", @ViewBag.IsAllPrice);
+        $("#AllIntegralChk").attr("checked", @ViewBag.IsAllPoint);
+         $("#PartChk").attr("checked", @ViewBag.IsPart);
+         if (@ViewBag.IsAllPrice== true) {
+             $("#Price").attr("value",@ViewBag.allprice);
+         }
+         if (@ViewBag.IsAllPoint== true) {
+             $("#Point").attr("value", @ViewBag.allPoint);
+         }
+         if (@ViewBag.IsPart== true) {
+             $("#PartPoint").attr("value", @ViewBag.partPoint);
+             $("#PartPrice").attr("value",@ViewBag.partPrice);
+         }
+        $("#Price").attr("disabled",!@ViewBag.IsAllPrice);
+        $("#Point").attr("disabled", !@ViewBag.IsAllPoint);
+         $("#PartPoint").attr("disabled", !@ViewBag.IsPart);
+         $("#PartPrice").attr("disabled",!@ViewBag.IsPart);
+    }
+
+    $("#ProductPriceChK").click(function () {
+        $("#Price").attr("disabled", !$(this).is(':checked'));
+    });
+    $("#AllIntegralChk").click(function () {
+        $("#Point").attr("disabled", !$(this).is(':checked'));
+    });
+
+    $("#PartChk").click(function () {
+        $("#PartPoint").attr("disabled", !$(this).is(':checked'));
+        $("#PartPrice").attr("disabled", !$(this).is(':checked'));
+    });
+
+</script>

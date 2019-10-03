@@ -1,0 +1,17 @@
+/*
+Uploadify
+Copyright (c) 2012 Reactive Apps, Ronnie Garcia
+Released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
+*/
+
+.uploadify { position: relative; display: inline-block; vertical-align: top; }
+.uploadify-button { text-align: center; width: 100%; background-color: #28b779; background: -webkit-gradient(linear, left top, left bottom, from(#28b779), to(#2aaf75)); border: 1px solid #2aaf75; color: #ffffff; -webkit-transition: all ease .15s; transition: all ease .15s; }
+.uploadify-button:hover { color: #FFF; background: -webkit-gradient(linear, left top, left bottom, from(#36e398), to(#1fd988)); background: -moz-linear-gradient(top, #36e398, #1fd988); filter: progid: DXImageTransform .Microsoft .gradient(startColorstr='#36e398', endColorstr='#1fd988'); }
+.uploadify-button.disabled { background-color: #D0D0D0; color: #808080; }
+.uploadify-queue { margin-bottom: 1em; z-index: 9999; position: absolute; }
+.uploadify-queue-item { background-color: #F5F5F5; padding: 5px; border: 1px solid #ccc; width: 350px; margin-top: 5px; }
+.uploadify-error { background-color: #FDE5DD !important; }
+.uploadify-queue-item .cancel a { background: url('uploadify-cancel.png') 0 0 no-repeat; float: right; height: 16px; text-indent: -9999px; width: 16px; }
+.uploadify-queue-item.completed { background-color: #E5E5E5; }
+.uploadify-progress { background-color: #E5E5E5; margin-top: 10px; width: 100%; }
+.uploadify-progress-bar { background-color: #0099FF; height: 3px; width: 1px; }

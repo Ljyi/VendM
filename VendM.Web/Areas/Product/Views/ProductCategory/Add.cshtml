@@ -1,0 +1,61 @@
+﻿
+@model VendM.Model.DataModelDto.Product.ProductCategoryDto
+
+    @{
+        ViewBag.Title = "Add";
+    }
+    @using (Html.BeginForm("Add", "ProductCategory", FormMethod.Post))
+    {
+        <div style="margin: 15px; border: 1px">
+            <div class="form-group">
+                <label for="name">商品類型名稱（中文）</label>
+                @*<input type="text" class="form-control" id="UserName" placeholder="Market名称" required>*@
+                @Html.TextBoxFor(m => m.CategoryName_CN, new { @class = "form-control", placeholder = "商品類型名稱", required = "required" })
+            </div>
+            <div class="form-group">
+                <label for="name">商品類型名稱（英文）</label>
+                @*<input type="text" class="form-control" id="UserName" placeholder="Market名称" required>*@
+                @Html.TextBoxFor(m => m.CategoryName_EN, new { @class = "form-control", placeholder = "商品類型名稱", required = "required" })
+            </div>
+            <div class="form-group">
+                <label for="name">類型编号</label>
+                @*<input type="text" class="form-control" id="LoginName" placeholder="Market编号" required>*@
+                @Html.TextBoxFor(m => m.CategoryCode, new { @class = "form-control", placeholder = "類型编号", required = "required" })
+            </div>
+            <div>
+                <button type="submit" style="width: 100%;" class="btn btn-primary btn-primary-subbtn">提交</button>
+            </div>
+        </div>
+    }
+    <script>
+        /*自定义validate*/
+        var rules = {
+            CategoryCode: {
+                required: true,
+                remote: "/ProductCategory/ValidateName"
+            },
+            CategoryName_CN: "required",
+            CategoryName_EN: "required"
+        },
+            messages = {
+                CategoryCode: {
+                    required: "请输入Market名稱",
+                    remote: "Market名稱已存在"
+                },
+                CategoryName_EN: {
+                    required: "请输入商品類型名稱"
+                },
+                CategoryName_CN: {
+                    required: "请输入商品類型名稱"
+                }
+            };
+        $(document).ready(function () {
+            // 在键盘按下并释放及提交后验证提交表单
+            $("#CategoryCode").val('@ViewBag.productcategoryCode');
+            $("form").validate({
+                rules: rules,
+                messages: messages
+            });
+        });
+    </script>
+

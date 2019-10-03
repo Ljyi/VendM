@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{84B07FF9-CDB1-4EBB-BC6A-B97E7D560C58}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VendM.Model</RootNamespace>
+    <AssemblyName>VendM.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\VendM.Model.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="APIModelDto\AdvertisementAPIDto.cs" />
+    <Compile Include="APIModelDto\AppDto.cs" />
+    <Compile Include="APIModelDto\MachineDetailAPIDto.cs" />
+    <Compile Include="APIModelDto\MachineDetailAPIOutput.cs" />
+    <Compile Include="APIModelDto\MachineAPIDto.cs" />
+    <Compile Include="APIModelDto\MachineProdcutDto.cs" />
+    <Compile Include="APIModelDto\MachineStockDetailsAPIDto.cs" />
+    <Compile Include="APIModelDto\MachineStockAPIDto.cs" />
+    <Compile Include="APIModelDto\OrderAPIDto.cs" />
+    <Compile Include="APIModelDto\PayMentAPIDto.cs" />
+    <Compile Include="APIModelDto\ProductCategoryAPIDto.cs" />
+    <Compile Include="APIModelDto\ProductImageAPIDto.cs" />
+    <Compile Include="APIModelDto\ProductAPIDto.cs" />
+    <Compile Include="APIModelDto\MachinePasswordCheckAPIDto.cs" />
+    <Compile Include="APIModelDto\TransactionAPIDto.cs" />
+    <Compile Include="APIModelDto\VideoAPIDto.cs" />
+    <Compile Include="DataModelDto\Advertisement\AdvertisementDto.cs" />
+    <Compile Include="DataModelDto\BaseDto.cs" />
+    <Compile Include="DataModelDto\BasicsDto\ReplenishmentUserDto.cs" />
+    <Compile Include="DataModelDto\BasicsDto\MachineDetailDto.cs" />
+    <Compile Include="DataModelDto\BasicsDto\MachineDto.cs" />
+    <Compile Include="DataModelDto\BasicsDto\PayMentDto.cs" />
+    <Compile Include="DataModelDto\BasicsDto\StoreDto.cs" />
+    <Compile Include="DataModelDto\System\SysMenuActionDto.cs" />
+    <Compile Include="DataModelDto\System\SysMenuDto.cs" />
+    <Compile Include="DataModelDto\TransactionDto.cs" />
+    <Compile Include="DataModel\Basics\APP.cs" />
+    <Compile Include="DataModel\System\SysMenuAction.cs" />
+    <Compile Include="Model\KeyValue.cs" />
+    <Compile Include="DataModelDto\Log\LogDto.cs" />
+    <Compile Include="DataModelDto\Log\APILogDto.cs" />
+    <Compile Include="Model\MenuTree.cs" />
+    <Compile Include="DataModelDto\ActiveMQ\MessageQueueDto.cs" />
+    <Compile Include="DataModelDto\Order\OrderDetailDto.cs" />
+    <Compile Include="DataModelDto\Order\OrderDto.cs" />
+    <Compile Include="DataModelDto\Order\OrderMainView.cs" />
+    <Compile Include="DataModelDto\Order\OrderView.cs" />
+    <Compile Include="DataModelDto\Product\ProductPriceDto.cs" />
+    <Compile Include="DataModelDto\Stock\MachineStockGridDto.cs" />
+    <Compile Include="DataModelDto\Stock\ReplenishmentDto.cs" />
+    <Compile Include="DataModelDto\Stock\ReplenishmentDetailDto.cs" />
+    <Compile Include="DataModel\ActiveMQ\MessageQueue.cs" />
+    <Compile Include="DataModel\Log\APILog.cs" />
+    <Compile Include="DataModel\Order\StoreOrderDetailDto.cs" />
+    <Compile Include="DataModel\Order\StoreOrderView.cs" />
+    <Compile Include="DataModelDto\Product\ProductCategoryDto.cs" />
+    <Compile Include="DataModelDto\Product\ProdcuctImgeDto.cs" />
+    <Compile Include="DataModelDto\Product\ProductDto.cs" />
+    <Compile Include="DataModelDto\System\ButtonDto.cs" />
+    <Compile Include="DataModelDto\System\RoleDto.cs" />
+    <Compile Include="DataModelDto\Stock\InventoryChangeLogDto.cs" />
+    <Compile Include="DataModelDto\Stock\MachineStockDetailDto.cs" />
+    <Compile Include="DataModelDto\Stock\MachineStockDto.cs" />
+    <Compile Include="DataModelDto\Stock\StockDto.cs" />
+    <Compile Include="DataModelDto\System\UserDto.cs" />
+    <Compile Include="DataModelDto\Advertisement\VideoDto.cs" />
+    <Compile Include="DataModel\Advertisement\Advertisement.cs" />
+    <Compile Include="DataModel\BaseModel.cs" />
+    <Compile Include="DataModel\Basics\Machine.cs" />
+    <Compile Include="DataModel\Basics\MachineDetail.cs" />
+    <Compile Include="DataModel\Basics\PayMent.cs" />
+    <Compile Include="DataModel\Basics\ReplenishmentUser.cs" />
+    <Compile Include="DataModel\Basics\Store.cs" />
+    <Compile Include="DataModel\Log\Log.cs" />
+    <Compile Include="DataModel\Order\Order.cs" />
+    <Compile Include="DataModel\Order\OrderDetails.cs" />
+    <Compile Include="DataModel\Order\Transaction.cs" />
+    <Compile Include="DataModel\Product\ProductImage.cs" />
+    <Compile Include="DataModel\Product\Product.cs" />
+    <Compile Include="DataModel\Product\ProductCategory.cs" />
+    <Compile Include="DataModel\Product\ProductPrice.cs" />
+    <Compile Include="DataModel\Stock\Replenishment.cs" />
+    <Compile Include="DataModel\System\Role.cs" />
+    <Compile Include="DataModel\Stock\InventoryChangeLog.cs" />
+    <Compile Include="DataModel\Stock\MachineStock.cs" />
+    <Compile Include="DataModel\Stock\MachineStockDetails.cs" />
+    <Compile Include="DataModel\Stock\ReplenishmentDetail.cs" />
+    <Compile Include="DataModel\Stock\Stock.cs" />
+    <Compile Include="DataModel\System\SysButton.cs" />
+    <Compile Include="DataModel\System\SysMenu.cs" />
+    <Compile Include="DataModel\System\User.cs" />
+    <Compile Include="DataModel\System\UserRights.cs" />
+    <Compile Include="DataModel\System\UserRole.cs" />
+    <Compile Include="DataModel\Advertisement\Video.cs" />
+    <Compile Include="EnumModel\AdvertisementEnum.cs" />
+    <Compile Include="EnumModel\EmilEnum.cs" />
+    <Compile Include="EnumModel\MQApiEnum.cs" />
+    <Compile Include="EnumModel\RequstSourceEnum.cs" />
+    <Compile Include="EnumModel\LogEnum.cs" />
+    <Compile Include="EnumModel\StatusEnum.cs" />
+    <Compile Include="EnumModel\FaultEnum.cs" />
+    <Compile Include="EnumModel\SaleEnum.cs" />
+    <Compile Include="EnumModel\StockEnum.cs" />
+    <Compile Include="ExportModel\OrderExport.cs" />
+    <Compile Include="TemplateModel\SendEmail.cs" />
+    <Compile Include="Model\Result.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ImportModel\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
